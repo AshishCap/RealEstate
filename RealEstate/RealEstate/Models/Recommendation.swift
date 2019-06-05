@@ -35,6 +35,31 @@ class TopDeveloper: Object
     }
 }
 
+class PreSale: Object
+{
+    @objc dynamic var id: Int = 0
+    @objc dynamic var siteImageUrl: String = ""
+    @objc dynamic var name: String = ""
+    @objc dynamic var amount: Int = 0
+    @objc dynamic var type: String = ""
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+}
+
+class PopularProject: Object
+{
+    @objc dynamic var id: Int = 0
+    @objc dynamic var siteImageUrl: String = ""
+    @objc dynamic var title: String = ""
+    @objc dynamic var developerName: String = ""
+    @objc dynamic var amount: Int = 0
+    @objc dynamic var type: String = ""
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+}
+
 class FeaturedLocalities: Object
 {
     @objc dynamic var id: Int = 0

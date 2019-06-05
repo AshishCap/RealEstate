@@ -29,6 +29,8 @@
 		75B9B83722A681FF00EEF695 /* Recommendation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B9B83622A681FF00EEF695 /* Recommendation.swift */; };
 		75B9B83922A6AB6700EEF695 /* BlogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B9B83822A6AB6700EEF695 /* BlogTableViewCell.swift */; };
 		75B9B83B22A6AB7A00EEF695 /* BlogCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B9B83A22A6AB7A00EEF695 /* BlogCollectionViewCell.swift */; };
+		75CBCFD922A77EE9002AC8F3 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CBCFD822A77EE9002AC8F3 /* DataManager.swift */; };
+		75CBCFDB22A7AB11002AC8F3 /* HeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75CBCFDA22A7AB11002AC8F3 /* HeaderTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,8 @@
 		75B9B83622A681FF00EEF695 /* Recommendation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recommendation.swift; sourceTree = "<group>"; };
 		75B9B83822A6AB6700EEF695 /* BlogTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogTableViewCell.swift; sourceTree = "<group>"; };
 		75B9B83A22A6AB7A00EEF695 /* BlogCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlogCollectionViewCell.swift; sourceTree = "<group>"; };
+		75CBCFD822A77EE9002AC8F3 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		75CBCFDA22A7AB11002AC8F3 /* HeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderTableViewCell.swift; sourceTree = "<group>"; };
 		DF9301B656CA2F1F211A63E6 /* Pods_RealEstate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealEstate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAD74EC2927E0CC784A701F3 /* Pods-RealEstate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealEstate.debug.xcconfig"; path = "Target Support Files/Pods-RealEstate/Pods-RealEstate.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,6 +97,7 @@
 		75B9B80522A6463B00EEF695 /* RealEstate */ = {
 			isa = PBXGroup;
 			children = (
+				75CBCFD722A77EB7002AC8F3 /* Manager */,
 				75B9B83522A6817800EEF695 /* Models */,
 				75B9B81B22A6519900EEF695 /* TableViewCell */,
 				75B9B81822A6500700EEF695 /* Utility */,
@@ -131,6 +136,7 @@
 				75B9B82E22A6713700EEF695 /* FeatureTableViewCell.swift */,
 				75B9B83822A6AB6700EEF695 /* BlogTableViewCell.swift */,
 				75B9B83A22A6AB7A00EEF695 /* BlogCollectionViewCell.swift */,
+				75CBCFDA22A7AB11002AC8F3 /* HeaderTableViewCell.swift */,
 			);
 			path = TableViewCell;
 			sourceTree = "<group>";
@@ -141,6 +147,14 @@
 				75B9B83622A681FF00EEF695 /* Recommendation.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		75CBCFD722A77EB7002AC8F3 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				75CBCFD822A77EE9002AC8F3 /* DataManager.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		CB642492E70195A101DC5359 /* Pods */ = {
@@ -289,7 +303,9 @@
 				75B9B81F22A6531200EEF695 /* FirstTableViewCell.swift in Sources */,
 				75B9B82B22A669D200EEF695 /* PopularCollectionViewCell.swift in Sources */,
 				75B9B82522A6611700EEF695 /* PreSaleCollectionViewCell.swift in Sources */,
+				75CBCFD922A77EE9002AC8F3 /* DataManager.swift in Sources */,
 				75B9B83B22A6AB7A00EEF695 /* BlogCollectionViewCell.swift in Sources */,
+				75CBCFDB22A7AB11002AC8F3 /* HeaderTableViewCell.swift in Sources */,
 				75B9B82722A6612C00EEF695 /* PreSaleTableViewCell.swift in Sources */,
 				75B9B81A22A6501500EEF695 /* AppUtility.swift in Sources */,
 				75B9B81D22A651FC00EEF695 /* FirstCollectionViewCell.swift in Sources */,
@@ -369,7 +385,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -425,7 +441,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -442,12 +458,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DYN4ZW5G8D;
 				INFOPLIST_FILE = RealEstate/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Technical.RealEstate;
+				PRODUCT_BUNDLE_IDENTIFIER = com.GoIDD.application;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -460,12 +478,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DYN4ZW5G8D;
 				INFOPLIST_FILE = RealEstate/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Technical.RealEstate;
+				PRODUCT_BUNDLE_IDENTIFIER = com.GoIDD.application;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -16,229 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        WebService.GetDataFromServer(completionHandler: {(responseObject, error) in
-//            print(responseObject)
-//            print("responseObject -> \(responseObject)")
-            
-            if let statusCode = responseObject["success"] as? String {
-                if (statusCode == "1")
-                {
-                    if let dic = responseObject["data"] as? NSDictionary
-                    {
-                        if let recommendedArray: NSArray = dic.value(forKey: "recommended") as? NSArray
-                        {
-                            //print(recommendedArray)
-                            let recommendationListArr = AppUtility.sharedInstance.realmInstance.objects(Recommendation.self)
-                            
-                            if recommendationListArr != nil && recommendationListArr.count > 0
-                            {
-                                for recommendation in recommendationListArr {
-                                    try! AppUtility.sharedInstance.realmInstance.write {
-                                        AppUtility.sharedInstance.realmInstance.delete(recommendation)
-                                    }
-                                }
-                            }
-                            
-                            for recommended in recommendedArray
-                            {
-                                let dic1 : NSDictionary =  recommended as! NSDictionary
-                                let recommendation = Recommendation()
-                                recommendation.siteImageUrl = dic1.value(forKey: "image") as? String ?? ""
-                                print(dic1.value(forKey: "id") as? Int ?? 0)
-                                recommendation.id = dic1.value(forKey: "id") as? Int ?? 0
-                                
-                                if let configurationDic: NSDictionary = dic1["configuration"] as? NSDictionary
-                                {
-                                    if let str = configurationDic.value(forKey: "name_en") as? String
-                                    {
-                                        if !str.isEmpty
-                                        {
-                                            if let property_typeDic: NSDictionary = dic1["property_type"] as? NSDictionary
-                                            {
-                                                if let str2 = property_typeDic.value(forKey: "name_en") as? String
-                                                {
-                                                    if !str2.isEmpty
-                                                    {
-                                                        recommendation.name = String(format:"%@ %@", str, str2)
-                                                    }
-                                                    else
-                                                    {
-                                                        recommendation.name = str
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    recommendation.name = str
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if let property_typeDic: NSDictionary = dic1["property_type"] as? NSDictionary
-                                            {
-                                                if let str2 = property_typeDic.value(forKey: "name_en") as? String
-                                                {
-                                                    if !str2.isEmpty
-                                                    {
-                                                        recommendation.name = str2
-                                                    }
-                                                    else
-                                                    {
-                                                        recommendation.name = ""
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    recommendation.name = ""
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                if let buildingDic: NSDictionary = dic1["building"] as? NSDictionary
-                                {
-                                    recommendation.address = buildingDic.value(forKey: "address") as? String ?? ""
-                                    recommendation.buildingName = buildingDic.value(forKey: "name") as? String ?? ""
-                                    if let developerDic: NSDictionary = buildingDic["developer"] as? NSDictionary
-                                    {
-                                        recommendation.developerName = developerDic.value(forKey: "name") as? String ?? ""
-                                    }
-                                }
-                                
-                                recommendation.price = dic1.value(forKey: "max_price") as? Int ?? 0
-                                
-                                do
-                                {
-                                    try AppUtility.sharedInstance.realmInstance.write { () -> Void in
-                                        AppUtility.sharedInstance.realmInstance.add(recommendation)
-                                    }
-                                }
-                                catch let err as NSError {
-                                    print("Realm data error -> \(err.debugDescription)")
-                                }
-                            }
-                        }
-                        if let top_developersArray: NSArray = dic.value(forKey: "top_developers") as? NSArray
-                        {
-                            let topDeveloperListArr = AppUtility.sharedInstance.realmInstance.objects(TopDeveloper.self)
-                            
-                            if topDeveloperListArr != nil && topDeveloperListArr.count > 0
-                            {
-                                for topDeveloper in topDeveloperListArr {
-                                    try! AppUtility.sharedInstance.realmInstance.write {
-                                        AppUtility.sharedInstance.realmInstance.delete(topDeveloper)
-                                    }
-                                }
-                            }
-                            
-                            for top_developer in top_developersArray
-                            {
-                                let dic1 : NSDictionary =  top_developer as! NSDictionary
-                                let topDeveloper = TopDeveloper()
-                                topDeveloper.id = dic1.value(forKey: "id") as? Int ?? 0
-                                topDeveloper.name = dic1.value(forKey: "name") as? String ?? ""
-                                topDeveloper.developer_desc = dic1.value(forKey: "developer_desc") as? String ?? ""
-                                topDeveloper.projectCount = dic1.value(forKey: "total_properties_count") as? Int ?? 0
-                                topDeveloper.siteImageUrl = dic1.value(forKey: "developer_image") as? String ?? ""
-                                
-                                do
-                                {
-                                    try AppUtility.sharedInstance.realmInstance.write { () -> Void in
-                                        AppUtility.sharedInstance.realmInstance.add(topDeveloper)
-                                    }
-                                }
-                                catch let err as NSError {
-                                    print("Realm data error -> \(err.debugDescription)")
-                                }
-                            }
-                        }
-                        if let pre_sale: NSArray = dic.value(forKey: "pre_sale") as? NSArray
-                        {
-                            print(pre_sale.count)
-                        }
-                        if let popular_projects: NSArray = dic.value(forKey: "popular_projects") as? NSArray
-                        {
-                            print(popular_projects.count)
-                        }
-                        if let featured_localities: NSArray = dic.value(forKey: "featured_localities") as? NSArray
-                        {
-                            let topDeveloperListArr = AppUtility.sharedInstance.realmInstance.objects(FeaturedLocalities.self)
-                            
-                            if topDeveloperListArr != nil && topDeveloperListArr.count > 0
-                            {
-                                for topDeveloper in topDeveloperListArr {
-                                    try! AppUtility.sharedInstance.realmInstance.write {
-                                        AppUtility.sharedInstance.realmInstance.delete(topDeveloper)
-                                    }
-                                }
-                            }
-                            
-                            for featuredlocality in featured_localities
-                            {
-                                let dic1 : NSDictionary =  featuredlocality as! NSDictionary
-                                let locality = FeaturedLocalities()
-                                locality.id = dic1.value(forKey: "id") as? Int ?? 0
-                                locality.name = dic1.value(forKey: "name_en") as? String ?? ""
-                                locality.projectCount = dic1.value(forKey: "buildings_count") as? Int ?? 0
-                                locality.price = dic1.value(forKey: "price_per_sqft") as? Int ?? 0
-                                
-                                do
-                                {
-                                    try AppUtility.sharedInstance.realmInstance.write { () -> Void in
-                                        AppUtility.sharedInstance.realmInstance.add(locality)
-                                    }
-                                }
-                                catch let err as NSError {
-                                    print("Realm data error -> \(err.debugDescription)")
-                                }
-                            }
-                        }
-                        if let blogs: NSArray = dic.value(forKey: "blogs") as? NSArray
-                        {
-                            let topDeveloperListArr = AppUtility.sharedInstance.realmInstance.objects(Blog.self)
-                            
-                            if topDeveloperListArr != nil && topDeveloperListArr.count > 0
-                            {
-                                for topDeveloper in topDeveloperListArr {
-                                    try! AppUtility.sharedInstance.realmInstance.write {
-                                        AppUtility.sharedInstance.realmInstance.delete(topDeveloper)
-                                    }
-                                }
-                            }
-                            
-                            for featuredlocality in blogs
-                            {
-                                let dic1 : NSDictionary =  featuredlocality as! NSDictionary
-                                let blog = Blog()
-                                blog.id = dic1.value(forKey: "id") as? Int ?? 0
-                                blog.siteImageUrl = dic1.value(forKey: "image") as? String ?? ""
-                                blog.name = dic1.value(forKey: "title_en") as? String ?? ""
-                                blog.date = dic1.value(forKey: "created_at") as? String ?? ""
-                                
-                                do
-                                {
-                                    try AppUtility.sharedInstance.realmInstance.write { () -> Void in
-                                        AppUtility.sharedInstance.realmInstance.add(blog)
-                                    }
-                                }
-                                catch let err as NSError {
-                                    print("Realm data error -> \(err.debugDescription)")
-                                }
-                            }
-                        }
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: REFRESHNOTIFICATION), object: nil, userInfo: nil)
-                    }
-                }
-            }
-            //recommended
-            //top_developers
-            //pre_sale
-            //popular_projects
-            //featured_localities
-            //blogs
-            
-        })
+        
+        self.setNavigationBar()
+        
         return true
     }
 
@@ -264,6 +44,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
+    func setNavigationBar()
+    {
+        let statusBar: UIView = UIApplication.shared.value(forKey: "statusBar") as! UIView
+        if statusBar.responds(to:#selector(setter: UIView.backgroundColor)) {
+            statusBar.backgroundColor = UIColor.init(red: 0.0/255.0, green: 203.0/255.0, blue: 147.0/255.0, alpha: 1.0)
+        }
+        
+        let size = CGSize(width: UIScreen.main.bounds.size.width, height: 64.0)
+        let image = AppUtility.sharedInstance.getImageWithColor(color: UIColor.init(red: 0.0/255.0, green: 203.0/255.0, blue: 147.0/255.0, alpha: 1.0), size:size)
+        UINavigationBar.appearance().tintColor = UIColor.white
+        UINavigationBar.appearance().setBackgroundImage(image.resizableImage(withCapInsets: UIEdgeInsets.zero, resizingMode: .stretch), for: .default)
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        UINavigationBar.appearance().backgroundColor = UIColor.init(red: 0.0/255.0, green: 203.0/255.0, blue: 147.0/255.0, alpha: 1.0)
+    }
 }
 

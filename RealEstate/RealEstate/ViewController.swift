@@ -17,23 +17,45 @@ class ViewController: UIViewController
     var topDeveloperDataArray: Results<TopDeveloper>?
     var featuredLocalitiesDataArray: Results<FeaturedLocalities>?
     var blogDataArray: Results<Blog>?
+    var popularProjectArray: Results<PopularProject>?
+    var preSaleArray: Results<PreSale>?
+    var countOfSection: Int = 0
+    var notificationToken: NotificationToken? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
+        self.navigationItem.title = "Kanguroo"
+        
         self.recommendationDataArray = AppUtility.sharedInstance.realmInstance.objects(Recommendation.self).sorted(byKeyPath: "id", ascending: true)
         self.topDeveloperDataArray = AppUtility.sharedInstance.realmInstance.objects(TopDeveloper.self).sorted(byKeyPath: "id", ascending: true)
         self.featuredLocalitiesDataArray = AppUtility.sharedInstance.realmInstance.objects(FeaturedLocalities.self).sorted(byKeyPath: "id", ascending: true)
         self.blogDataArray = AppUtility.sharedInstance.realmInstance.objects(Blog.self).sorted(byKeyPath: "id", ascending: true)
+        self.popularProjectArray = AppUtility.sharedInstance.realmInstance.objects(PopularProject.self).sorted(byKeyPath: "id", ascending: true)
+        self.preSaleArray = AppUtility.sharedInstance.realmInstance.objects(PreSale.self).sorted(byKeyPath: "id", ascending: true)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(ReloadTableViewData), name: Notification.Name(REFRESHNOTIFICATION), object: nil)
         
         self.tableView.tableFooterView = UIView()
+        tableView.contentInset = UIEdgeInsets(top: -1, left: 0, bottom: 0, right: 0)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let tableView = scrollView as? UITableView else {return}
+        _ = tableView.indexPathsForVisibleRows!.map{ tableView.headerView(forSection: $0.section) }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        DataManager.sharedInstance.GetDataFromServer()
+        AppUtility.sharedInstance.showLoadingHUD(to_view: self.view)
     }
     
     @objc func ReloadTableViewData()
     {
         self.tableView.reloadData()
+        AppUtility.sharedInstance.hideLoadingHUD(for_view: self.view)
     }
 }
 
@@ -46,7 +68,73 @@ extension ViewController: UITableViewDelegate
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return 1
+        if section == 0
+        {
+            if self.recommendationDataArray!.count > 0
+            {
+                return 2
+            }
+            else
+            {
+                return 0
+            }
+        }
+        else if section == 1
+        {
+            if self.topDeveloperDataArray!.count > 0
+            {
+                return 2
+            }
+            else
+            {
+                return 0
+            }
+        }
+        else if section == 2
+        {
+            if self.preSaleArray!.count > 0
+            {
+                return 2
+            }
+            else
+            {
+                return 0
+            }
+        }
+        else if section == 3
+        {
+            if self.popularProjectArray!.count > 0
+            {
+                return 2
+            }
+            else
+            {
+                return 0
+            }
+        }
+        else if section == 4
+        {
+            if self.featuredLocalitiesDataArray!.count > 0
+            {
+                return 2
+            }
+            else
+            {
+                return 0
+            }
+        }
+        else if section == 5
+        {
+            if self.blogDataArray!.count > 0
+            {
+                return 2
+            }
+            else
+            {
+                return 0
+            }
+        }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
@@ -56,74 +144,77 @@ extension ViewController: UITableViewDelegate
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
     {
+        if indexPath.row == 0
+        {
+            return 60
+        }
         if indexPath.section == 0
         {
-            return 270
+            if self.recommendationDataArray!.count > 0
+            {
+                return 285
+            }
+            else
+            {
+                return 1
+            }
         }
         else if indexPath.section == 1
         {
-            return 180
+            if self.topDeveloperDataArray!.count > 0
+            {
+                return 180
+            }
+            else
+            {
+                return 0
+            }
         }
         else if indexPath.section == 2
         {
-            return 160
+            if self.preSaleArray!.count > 0
+            {
+                return 180
+            }
+            else
+            {
+                return 0
+            }
         }
         else if indexPath.section == 3
         {
-            return 200
+            if self.popularProjectArray!.count > 0
+            {
+                return 200
+            }
+            else
+            {
+                return 0
+            }
         }
         else if indexPath.section == 4
         {
-            return 80
+            if self.featuredLocalitiesDataArray!.count > 0
+            {
+                return 80
+            }
+            else
+            {
+                return 0
+            }
         }
         else if indexPath.section == 5
         {
-            return 180
+            if self.blogDataArray!.count > 0
+            {
+                return 180
+            }
+            else
+            {
+                return 0
+            }
         }
         return 0
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
-    {
-        var view = UIView()
-        view = UIView.init(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 60))
-        var groupName_label = UILabel()
-        groupName_label = UILabel.init(frame: CGRect(x: 20, y: 0, width: view.frame.size.width - 90, height: 45))
-        groupName_label.font = UIFont.init(name: "verdana-Bold", size: 20)
-        groupName_label.textColor = .black
-        groupName_label.textAlignment = .left
-        
-        if section == 0
-        {
-            groupName_label.text = "Recommended"
-        }
-        else if section == 1
-        {
-            groupName_label.text = "Top Developers"
-        }
-        else if section == 2
-        {
-            groupName_label.text = "Pre-Sales"
-        }
-        else if section == 3
-        {
-            groupName_label.text = "Popular Projects"
-        }
-        else if section == 4
-        {
-            groupName_label.text = "Featured Localities"
-        }
-        else if section == 5
-        {
-            groupName_label.text = "Our Blogs and Articles"
-        }
-        view.addSubview(groupName_label)
-        return view
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat
-    {
-        return 60
     }
 }
 
@@ -133,59 +224,131 @@ extension ViewController: UITableViewDataSource
     {
         switch indexPath.section {
         case 0:
-            let cell : FirstTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "FirstTableViewCell", for: indexPath) as! FirstTableViewCell
+            if indexPath.row == 0
+            {
+                //HeaderTableViewCell was used for scrolable tableview section header.
+                let cell : HeaderTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "HeaderTableViewCell", for: indexPath) as! HeaderTableViewCell
+                cell.nameLabel.text = "Recommended"
+                
+                return cell
+            }
+            else
+            {
+                let cell : FirstTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "FirstTableViewCell", for: indexPath) as! FirstTableViewCell
+                
+                cell.firstCollectionView.delegate = self
+                cell.firstCollectionView.dataSource = self
+                cell.firstCollectionView.tag = 1
+                cell.firstCollectionView.reloadData()
+                
+                cell.selectionStyle = .none
+                return cell
+            }
             
-            cell.firstCollectionView.delegate = self
-            cell.firstCollectionView.dataSource = self
-            cell.firstCollectionView.tag = 1
-            
-            cell.selectionStyle = .none
-            return cell
         case 1:
-            let cell : DeveloperTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "DeveloperTableViewCell", for: indexPath) as! DeveloperTableViewCell
+            if indexPath.row == 0
+            {
+                let cell : HeaderTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "HeaderTableViewCell", for: indexPath) as! HeaderTableViewCell
+                cell.nameLabel.text = "Top Developers"
+                
+                return cell
+            }
+            else
+            {
+                let cell : DeveloperTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "DeveloperTableViewCell", for: indexPath) as! DeveloperTableViewCell
+                
+                cell.developerCollectionView.delegate = self
+                cell.developerCollectionView.dataSource = self
+                cell.developerCollectionView.tag = 2
+                cell.developerCollectionView.reloadData()
+                
+                cell.selectionStyle = .none
+                return cell
+            }
             
-            cell.developerCollectionView.delegate = self
-            cell.developerCollectionView.dataSource = self
-            cell.developerCollectionView.tag = 2
-            
-            cell.selectionStyle = .none
-            return cell
         case 2:
-            let cell : PreSaleTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "PreSaleTableViewCell", for: indexPath) as! PreSaleTableViewCell
+            if indexPath.row == 0
+            {
+                let cell : HeaderTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "HeaderTableViewCell", for: indexPath) as! HeaderTableViewCell
+                cell.nameLabel.text = "Pre-Sales"
+                
+                return cell
+            }
+            else
+            {
+                let cell : PreSaleTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "PreSaleTableViewCell", for: indexPath) as! PreSaleTableViewCell
+                
+                
+                cell.preSaleCollectionView.delegate = self
+                cell.preSaleCollectionView.dataSource = self
+                cell.preSaleCollectionView.tag = 3
+                cell.preSaleCollectionView.reloadData()
+                
+                cell.selectionStyle = .none
+                return cell
+            }
             
-            cell.preSaleCollectionView.delegate = self
-            cell.preSaleCollectionView.dataSource = self
-            cell.preSaleCollectionView.tag = 3
-            
-            cell.selectionStyle = .none
-            return cell
         case 3:
-            let cell : PopularTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "PopularTableViewCell", for: indexPath) as! PopularTableViewCell
+            if indexPath.row == 0
+            {
+                let cell : HeaderTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "HeaderTableViewCell", for: indexPath) as! HeaderTableViewCell
+                cell.nameLabel.text = "Popular Projects"
+                
+                return cell
+            }
+            else
+            {
+                let cell : PopularTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "PopularTableViewCell", for: indexPath) as! PopularTableViewCell
+                
+                cell.popularCollectionView.delegate = self
+                cell.popularCollectionView.dataSource = self
+                cell.popularCollectionView.tag = 4
+                cell.popularCollectionView.reloadData()
+                
+                cell.selectionStyle = .none
+                return cell
+            }
             
-            cell.popularCollectionView.delegate = self
-            cell.popularCollectionView.dataSource = self
-            cell.popularCollectionView.tag = 4
-            
-            cell.selectionStyle = .none
-            return cell
         case 4:
-            let cell : FeatureTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "FeatureTableViewCell", for: indexPath) as! FeatureTableViewCell
-            
-            cell.featureCollectionView.delegate = self
-            cell.featureCollectionView.dataSource = self
-            cell.featureCollectionView.tag = 5
-            
-            cell.selectionStyle = .none
-            return cell
+            if indexPath.row == 0
+            {
+                let cell : HeaderTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "HeaderTableViewCell", for: indexPath) as! HeaderTableViewCell
+                cell.nameLabel.text = "Featured Localities"
+                
+                return cell
+            }
+            else
+            {
+                let cell : FeatureTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "FeatureTableViewCell", for: indexPath) as! FeatureTableViewCell
+                
+                cell.featureCollectionView.delegate = self
+                cell.featureCollectionView.dataSource = self
+                cell.featureCollectionView.tag = 5
+                cell.featureCollectionView.reloadData()
+                
+                cell.selectionStyle = .none
+                return cell
+            }
         case 5:
-            let cell : BlogTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "BlogTableViewCell", for: indexPath) as! BlogTableViewCell
-            
-            cell.blogCollectionView.delegate = self
-            cell.blogCollectionView.dataSource = self
-            cell.blogCollectionView.tag = 6
-            
-            cell.selectionStyle = .none
-            return cell
+            if indexPath.row == 0
+            {
+                let cell : HeaderTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "HeaderTableViewCell", for: indexPath) as! HeaderTableViewCell
+                cell.nameLabel.text = "Our Blogs and Articles"
+                
+                return cell
+            }
+            else
+            {
+                let cell : BlogTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "BlogTableViewCell", for: indexPath) as! BlogTableViewCell
+                
+                cell.blogCollectionView.delegate = self
+                cell.blogCollectionView.dataSource = self
+                cell.blogCollectionView.tag = 6
+                cell.blogCollectionView.reloadData()
+                
+                cell.selectionStyle = .none
+                return cell
+            }
         default:
             return UITableViewCell()
         }
@@ -219,11 +382,15 @@ extension ViewController: UICollectionViewDataSource
         }
         else if collectionView.tag == 3
         {
-            return 4
+            if (self.preSaleArray!.count > 0) {
+                return preSaleArray!.count
+            }
         }
         else if collectionView.tag == 4
         {
-            return 5
+            if (self.popularProjectArray!.count > 0) {
+                return popularProjectArray!.count
+            }
         }
         else if collectionView.tag == 5
         {
@@ -255,12 +422,16 @@ extension ViewController: UICollectionViewDataSource
                 let url = URL(string: (recommendation.siteImageUrl))!
                 let urlReq : URLRequest = URLRequest.init(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 60)
                 
-                cell.siteImageView.af_setImage(withURLRequest: urlReq, placeholderImage: nil, filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .noTransition, runImageTransitionIfCached: true, completion:
+                cell.siteImageView.af_setImage(withURLRequest: urlReq, placeholderImage: UIImage.init(named: "placeholder_Image"), filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .noTransition, runImageTransitionIfCached: true, completion:
                     {
                         response in
                         if (response.result.isSuccess)
                         {
                             cell.siteImageView?.image =  response.result.value!
+                        }
+                        else
+                        {
+                            cell.siteImageView.image = UIImage.init(named: "placeholder_Image")
                         }
                 })
             
@@ -277,12 +448,16 @@ extension ViewController: UICollectionViewDataSource
                 print(url)
                 let urlReq : URLRequest = URLRequest.init(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 60)
                 
-                cell.siteImageView.af_setImage(withURLRequest: urlReq, placeholderImage: nil, filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .noTransition, runImageTransitionIfCached: true, completion:
+                cell.siteImageView.af_setImage(withURLRequest: urlReq, placeholderImage: UIImage.init(named: "placeholder_Image"), filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .noTransition, runImageTransitionIfCached: true, completion:
                     {
                         response in
                         if (response.result.isSuccess)
                         {
                             cell.siteImageView?.image =  response.result.value!
+                        }
+                        else
+                        {
+                            cell.siteImageView.image = UIImage.init(named: "placeholder_Image")
                         }
                 })
                 
@@ -295,8 +470,28 @@ extension ViewController: UICollectionViewDataSource
         else if collectionView.tag == 3
         {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PreSaleCollectionViewCell", for: indexPath) as! PreSaleCollectionViewCell
+            let preSale : PreSale  = self.preSaleArray![indexPath .row]
             
-            cell.siteImageView.backgroundColor = UIColor.red
+            cell.amountLabel.text = preSale.amount > 0 ? String(format:"$ %dK",preSale.amount) : ""
+            cell.apartmentType.text = preSale.type
+            cell.nameLabel.text = preSale.name
+            
+            let url = URL(string: (preSale.siteImageUrl))!
+            print(url)
+            let urlReq : URLRequest = URLRequest.init(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 60)
+            
+            cell.siteImageView.af_setImage(withURLRequest: urlReq, placeholderImage: UIImage.init(named: "placeholder_Image"), filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .noTransition, runImageTransitionIfCached: true, completion:
+                {
+                    response in
+                    if (response.result.isSuccess)
+                    {
+                        cell.siteImageView?.image =  response.result.value!
+                    }
+                    else
+                    {
+                        cell.siteImageView.image = UIImage.init(named: "placeholder_Image")
+                    }
+            })
             
             return cell
         }
@@ -304,7 +499,29 @@ extension ViewController: UICollectionViewDataSource
         {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PopularCollectionViewCell", for: indexPath) as! PopularCollectionViewCell
             
-            cell.siteImageView.backgroundColor = UIColor.red
+            let popularProject : PopularProject  = self.popularProjectArray![indexPath .row]
+            
+            let url = URL(string: (popularProject.siteImageUrl))!
+            print(url)
+            let urlReq : URLRequest = URLRequest.init(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 60)
+            
+            cell.siteImageView.af_setImage(withURLRequest: urlReq, placeholderImage: UIImage.init(named: "placeholder_Image"), filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .noTransition, runImageTransitionIfCached: true, completion:
+                {
+                    response in
+                    if (response.result.isSuccess)
+                    {
+                        cell.siteImageView?.image =  response.result.value!
+                    }
+                    else
+                    {
+                        cell.siteImageView.image = UIImage.init(named: "placeholder_Image")
+                    }
+            })
+            
+            cell.amountLabel.text = popularProject.amount > 0 ? String(format:"$ %dK",popularProject.amount) : ""
+            cell.appartmentType.text = popularProject.type
+            cell.developerLabel.text = popularProject.developerName
+            cell.titleLabel.text = popularProject.title
             
             return cell
         }
@@ -315,8 +532,6 @@ extension ViewController: UICollectionViewDataSource
                 cell.featureLabel.text = featuredLocalities.name
                 cell.totalCountLabel.text = String(format:"%d",featuredLocalities.projectCount)
                 cell.areaLabel.text = String(format:"$ %d / sqft", featuredLocalities.price)
-            
-            //cell.siteImageView.backgroundColor = UIColor.red
             
             return cell
         }
@@ -329,12 +544,16 @@ extension ViewController: UICollectionViewDataSource
                 print(url)
                 let urlReq : URLRequest = URLRequest.init(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 60)
                 
-                cell.siteImageView.af_setImage(withURLRequest: urlReq, placeholderImage: nil, filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .noTransition, runImageTransitionIfCached: true, completion:
+                cell.siteImageView.af_setImage(withURLRequest: urlReq, placeholderImage: UIImage.init(named: "placeholder_Image"), filter: nil, progress: nil, progressQueue: DispatchQueue.main, imageTransition: .noTransition, runImageTransitionIfCached: true, completion:
                     {
                         response in
                         if (response.result.isSuccess)
                         {
                             cell.siteImageView?.image =  response.result.value!
+                        }
+                        else
+                        {
+                            cell.siteImageView.image = UIImage.init(named: "placeholder_Image")
                         }
                 })
                 

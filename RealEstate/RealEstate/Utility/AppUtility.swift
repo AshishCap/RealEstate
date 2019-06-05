@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import MBProgressHUD
 
 class AppUtility: NSObject
 {
@@ -23,6 +24,28 @@ class AppUtility: NSObject
     lazy var realmInstance:Realm = {
         return try! Realm()
     }()
+    
+    func getImageWithColor(color: UIColor, size: CGSize) -> UIImage
+    {
+        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: size.width, height: size.height))
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        color.setFill()
+        UIRectFill(rect)
+        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return image
+    }
+    
+    func showLoadingHUD(to_view: UIView) {
+        let hud = MBProgressHUD.showAdded(to: to_view, animated: true)
+        hud.label.text = "Please Wait"
+    }
+    
+    func hideLoadingHUD(for_view: UIView) {
+        DispatchQueue.main.async {
+            MBProgressHUD.hide(for: for_view, animated: true)
+        }
+    }
     
 }
 
